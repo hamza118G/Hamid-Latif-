@@ -1,0 +1,141 @@
+/* client/src/styles.css */
+body{
+
+    font-family: 'Poppins', sans-serif;
+  
+}
+/* Vibrant Header */
+.vibrant-navbar {
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.vibrant-navbar .navbar-brand {
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.vibrant-navbar .nav-link {
+  color: #fff !important;
+  transition: color 0.3s ease;
+}
+
+.vibrant-navbar .nav-link:hover {
+  color: #ffd700 !important;
+}
+
+.vibrant-navbar .btn-outline-light {
+  border-color: #fff;
+  color: #fff;
+}
+
+.vibrant-navbar .btn-outline-light:hover {
+  background-color: #ffd700;
+  color: #333;
+  border-color: #ffd700;
+}
+
+/* Vibrant Footer */
+.vibrant-footer {
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+  color: #fff;
+  padding: 1.5rem 0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.vibrant-footer p {
+  margin: 0;
+  font-weight: 500;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Vibrant Card */
+.vibrant-card {
+  background: linear-gradient(135deg, #ffffff, #f0f8ff);
+  border: none;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+}
+
+.vibrant-card .card-title {
+  color: #ff6b6b;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.vibrant-card .form-label {
+  color: #45b7d1;
+  font-weight: 500;
+}
+
+.vibrant-card .form-control {
+  border-color: #4ecdc4;
+  transition: border-color 0.3s ease;
+}
+
+.vibrant-card .form-control:focus {
+  border-color: #ff6b6b;
+  box-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+}
+
+/* Buttons */
+.btn-vibrant {
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.btn-vibrant:hover {
+  transform: scale(1.02);
+  background: linear-gradient(90deg, #ff8787, #66e0d9);
+  color: #fff;
+}
+
+/* DataTable */
+.vibrant-datatable {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.vibrant-datatable .rdt_TableHead {
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+  color: #fff;
+}
+
+.vibrant-datatable .rdt_TableHeadRow {
+  font-weight: 600;
+  color: #333;
+}
+
+.vibrant-datatable .rdt_TableRow:hover {
+  background-color: #f0f8ff;
+}
+
+/* Stats Cards */
+.stats-card {
+  background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+.patient-length{
+  background-color: #333;
+  padding: 10px;
+  border-radius: 10px;
+
+}
+.section-cnic{
+  float: right;
+}
+.test{
+  font-size: 20px;
+  text-decoration: underline;
+}
+.dash{
+  text-decoration: underline;
+  font-size: 50px;
+}
