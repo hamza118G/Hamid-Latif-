@@ -18,7 +18,7 @@ function Register() {
         email,
         password
       });
-      navigate('/');
+      navigate('/home');
     } catch (error) {
       console.error('Registration error:', error);
       alert('Registration failed');

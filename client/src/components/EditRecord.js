@@ -167,7 +167,7 @@ function EditRecord() {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // navigate('/home');
+      navigate('/home');
     } catch (error) {
       console.error('Error updating record:', error);
       setError(error.response?.data?.message || 'Failed to update record');

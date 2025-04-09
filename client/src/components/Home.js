@@ -1,4 +1,3 @@
-// client/src/components/Home.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
@@ -7,7 +6,6 @@ import axios from 'axios';
 import { FaEdit, FaTrash, FaPrint } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -51,8 +49,8 @@ function Home() {
       setUsers(response.data);
       setShowAllAccounts(true);
     } catch (error) {
-      console.error('Error fetching all users:', error);
-      alert('Failed to fetch all accounts');
+      console.error('Error fetching all users:', error.response?.data || error.message);
+      alert('Failed to fetch all accounts: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -128,8 +126,8 @@ function Home() {
     ]);
     autoTable(doc, {
       startY: 20,
-      headStyles: { fontSize: 12 }, // Increase table header font size
-      bodyStyles: { fontSize: 10, cellPadding: 4 }, // Increase
+      headStyles: { fontSize: 12 },
+      bodyStyles: { fontSize: 10, cellPadding: 4 },
       head: [['Field', 'Value']],
       body: [
         ['Patient Name', patient.patientName],
@@ -141,7 +139,6 @@ function Home() {
         ['BMI', patient.bmi],
         ['Phone Number', patient.phoneNumber],
         ['Address', patient.currentAddress],
-        ['Adjuvant Treatment', patient.adjuvantTreatment],
         ['Comorbidities', patient.comorbidities],
         ['Family History', patient.familyHistory],
         ['Menopausal History', patient.menopausalHistory],
@@ -165,7 +162,6 @@ function Home() {
         ['Radiological Response', patient.radiologicalResponse],
         ['Pathological Response', patient.pathologicalResponse.pcr],
         ['Types Of Surgery', patient.typesOfSurgery],
-      
         ['Relapse', patient.relapse],
         ['Site Of Relapse', patient.siteOfRelapse],
         ['Distant Relapse Site', patient.distantRelapseSite],
@@ -255,7 +251,14 @@ function Home() {
               <Col md={4}>
                 <Card className="stats-card text-center">
                   <Card.Body>
-                    <Card.Text className="test"><strong>Total Submissions:</strong> {totalSubmissions}</Card.Text>
+                    {/* Make Total Submissions clickable */}
+                    <Card.Text className="test">
+                      <strong>
+                        <Link to="/all-submissions" style={{ textDecoration: 'none', color: 'inherit' }}>
+                          Total Submissions: {totalSubmissions}
+                        </Link>
+                      </strong>
+                    </Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
@@ -263,6 +266,9 @@ function Home() {
             <hr />
             <Button className="btn-vibrant mb-4 d-flex justify-content-center" as={Link} to="/add-record">
               + Add New Record
+            </Button>
+            <Button className="btn-vibrant mb-4 d-flex justify-content-center" as={Link} to="/register">
+              + Add New User Account
             </Button>
             <Button className="btn-vibrant mb-4 d-flex justify-content-center w-100" onClick={() => { setShowAllAccounts(false); setSearchCnic(''); }}>
               My Registry

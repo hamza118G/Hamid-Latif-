@@ -17,6 +17,17 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
+// server/routes/patient.js
+router.get('/all-records', authMiddleware, async (req, res) => {
+  try {
+    const allPatients = await Patient.find().lean().sort({ createdAt: -1 });
+    res.json(allPatients);
+  } catch (error) {
+    console.error('Error in /all-records:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Add new patient record
 router.post('/add', authMiddleware, async (req, res) => {
   try {

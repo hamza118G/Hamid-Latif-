@@ -9,6 +9,7 @@ import Register from './components/Register';
 import AddRecord from './components/AddRecord';
 import EditRecord from './components/EditRecord';
 import EditUser from './components/EditUser';
+import AllSubmissions from './components/AllSubmissions';
 
 function Layout() {
   const location = useLocation();
@@ -24,6 +25,7 @@ function Layout() {
           <Route path="/add-record" element={<AddRecord />} />
           <Route path="/edit-record/:id" element={<EditRecord />} />
           <Route path="/edit-user/:id" element={<EditUser />} />
+          <Route path="/all-submissions" element={<AllSubmissions />} />
         </Routes>
       </main>
       <Footer />
