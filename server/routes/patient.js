@@ -33,7 +33,7 @@ router.post('/add', authMiddleware, async (req, res) => {
   try {
     const {
       patientName, uniquePatientId, patientId, cnic, age, gender, bmi, comorbidities,
-      familyHistory, menopausalHistory, phoneNumber, currentAddress, dateOfDiagnosis,
+      familyHistory, menopausalHistory, phoneNumber, currentAddress,phoneNumber2, currentAddress2, dateOfDiagnosis,
       modeOfHistologicalDiagnosis, multifocalBreastCancer, lateralityOfBreastCancer,
       histopathologicalGrade, morphologyOfBreastCancer, ki67, tumorSize, lymphNodeStatus,
       clinicalStage, brcaMutationStatus, pdla1Expression, neoadjuvantChemotherapy,
@@ -44,7 +44,7 @@ router.post('/add', authMiddleware, async (req, res) => {
     } = req.body;
     const patient = new Patient({
       patientName, uniquePatientId, patientId, cnic, age, gender, bmi, comorbidities,
-      familyHistory, menopausalHistory, phoneNumber, currentAddress, dateOfDiagnosis,
+      familyHistory, menopausalHistory, phoneNumber, currentAddress, phoneNumber2, currentAddress2,dateOfDiagnosis,
       modeOfHistologicalDiagnosis, multifocalBreastCancer, lateralityOfBreastCancer,
       histopathologicalGrade, morphologyOfBreastCancer, ki67, tumorSize, lymphNodeStatus,
       clinicalStage, brcaMutationStatus, pdla1Expression, neoadjuvantChemotherapy,
@@ -76,7 +76,7 @@ router.put('/update/:id', authMiddleware, async (req, res) => {
   try {
     const {
       patientName, uniquePatientId, patientId, cnic, age, gender, bmi, comorbidities,
-      familyHistory, menopausalHistory, phoneNumber, currentAddress, dateOfDiagnosis,
+      familyHistory, menopausalHistory, phoneNumber, currentAddress,phoneNumber2, currentAddress2, dateOfDiagnosis,
       modeOfHistologicalDiagnosis, multifocalBreastCancer, lateralityOfBreastCancer,
       histopathologicalGrade, morphologyOfBreastCancer, ki67, tumorSize, lymphNodeStatus,
       clinicalStage, brcaMutationStatus, pdla1Expression, neoadjuvantChemotherapy,
@@ -89,7 +89,7 @@ router.put('/update/:id', authMiddleware, async (req, res) => {
       { _id: req.params.id, userId: req.userId },
       {
         patientName, uniquePatientId, patientId, cnic, age, gender, bmi, comorbidities,
-        familyHistory, menopausalHistory, phoneNumber, currentAddress, dateOfDiagnosis,
+        familyHistory, menopausalHistory, phoneNumber, currentAddress,phoneNumber2, currentAddress2, dateOfDiagnosis,
         modeOfHistologicalDiagnosis, multifocalBreastCancer, lateralityOfBreastCancer,
         histopathologicalGrade, morphologyOfBreastCancer, ki67, tumorSize, lymphNodeStatus,
         clinicalStage, brcaMutationStatus, pdla1Expression, neoadjuvantChemotherapy,

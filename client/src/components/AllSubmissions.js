@@ -28,7 +28,7 @@ function AllSubmissions() {
       const response = await axios.get('http://localhost:5000/api/patient/all-records', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      console.log('Fetched patients:', response.data); // Debug: Log the response
+   
       const sortedPatients = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
       setPatients(sortedPatients);
       setError(null); // Clear any previous errors
@@ -162,7 +162,7 @@ function AllSubmissions() {
           ) : error ? (
             <p className="text-danger">{error}</p>
           ) : patients.length === 0 ? (
-            <p>No patient records found.</p>
+            <p>No patient records found. Yet to Add a Record</p>
           ) : (
             <DataTable
               columns={patientColumns}

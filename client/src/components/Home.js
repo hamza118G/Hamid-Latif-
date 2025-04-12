@@ -1,3 +1,4 @@
+// client/src/components/Home.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
@@ -139,6 +140,8 @@ function Home() {
         ['BMI', patient.bmi],
         ['Phone Number', patient.phoneNumber],
         ['Address', patient.currentAddress],
+        ['Phone Number2', patient.phoneNumber2],
+        ['Address2', patient.currentAddress2],
         ['Comorbidities', patient.comorbidities],
         ['Family History', patient.familyHistory],
         ['Menopausal History', patient.menopausalHistory],
@@ -161,6 +164,7 @@ function Home() {
         ['Adverse Events Reason', patient.adverseEventsReason],
         ['Radiological Response', patient.radiologicalResponse],
         ['Pathological Response', patient.pathologicalResponse.pcr],
+        ['Pathological ypTONO', patient.pathologicalResponse.ypTONO],
         ['Types Of Surgery', patient.typesOfSurgery],
         ['Relapse', patient.relapse],
         ['Site Of Relapse', patient.siteOfRelapse],

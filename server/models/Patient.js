@@ -14,6 +14,8 @@ const patientSchema = new mongoose.Schema({
   menopausalHistory: { type: String },
   phoneNumber: { type: String, required: true },
   currentAddress: { type: String, required: true },
+  phoneNumber2: { type: String, required: true },
+  currentAddress2: { type: String, required: true },
   // Breast Cancer Details
   dateOfDiagnosis: { type: Date },
   modeOfHistologicalDiagnosis: { type: String, enum: ['Trucut Biopsy', 'FNAC', 'Others'] },

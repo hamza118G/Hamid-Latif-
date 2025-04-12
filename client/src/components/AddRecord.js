@@ -18,6 +18,8 @@ function AddRecord() {
   const [menopausalHistory, setMenopausalHistory] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [currentAddress, setCurrentAddress] = useState('');
+  const [phoneNumber2, setPhoneNumber2] = useState('');
+  const [currentAddress2, setCurrentAddress2] = useState('');
   // Breast Cancer Details
   const [dateOfDiagnosis, setDateOfDiagnosis] = useState('');
   const [modeOfHistologicalDiagnosis, setModeOfHistologicalDiagnosis] = useState('');
@@ -41,7 +43,7 @@ function AddRecord() {
   const [adverseEventsReason, setAdverseEventsReason] = useState('');
   // Response to Treatment
   const [radiologicalResponse, setRadiologicalResponse] = useState('');
-  const [pathologicalResponse, setPathologicalResponse] = useState({ pcr: '', ypTONO: '', ypT: '', ypN: '' });
+  const [pathologicalResponse, setPathologicalResponse] = useState({ pcr: '', ypTONO: '' });
   const [typesOfSurgery, setTypesOfSurgery] = useState('');
   const [axillaryDissectionPerformed, setAxillaryDissectionPerformed] = useState('');
   const [adjuvantTreatment, setAdjuvantTreatment] = useState('');
@@ -77,7 +79,7 @@ function AddRecord() {
         'http://localhost:5000/api/patient/add',
         {
           patientName, uniquePatientId, patientId, cnic, age: Number(age), gender, bmi: Number(bmi),
-          comorbidities, familyHistory, menopausalHistory, phoneNumber, currentAddress,
+          comorbidities, familyHistory, menopausalHistory, phoneNumber, currentAddress,phoneNumber2, currentAddress2,
           dateOfDiagnosis: dateOfDiagnosis || null, modeOfHistologicalDiagnosis, multifocalBreastCancer,
           lateralityOfBreastCancer, histopathologicalGrade, morphologyOfBreastCancer,
           ki67: ki67 ? Number(ki67) : null, tumorSize, lymphNodeStatus, clinicalStage,
@@ -112,12 +114,14 @@ function AddRecord() {
             <Form.Group className="mb-3"><Form.Label>CNIC</Form.Label><Form.Control type="text" value={cnic} onChange={(e) => setCnic(e.target.value)} placeholder="Enter CNIC" required /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Age (Years)</Form.Label><Form.Control type="number" value={age} onChange={(e) => setAge(e.target.value)} placeholder="Enter age" required /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Gender</Form.Label><Form.Select value={gender} onChange={(e) => setGender(e.target.value)} required><option value="">Select Gender</option><option value="MALE">MALE</option><option value="FEMALE">FEMALE</option></Form.Select></Form.Group>
-            <Form.Group className="mb-3"><Form.Label>BMI (kg/m²)</Form.Label><Form.Control type="number" step="0.1" value={bmi} onChange={(e) => setBmi(e.target.value)} placeholder="Enter BMI" required /></Form.Group>
+            <Form.Group className="mb-3"><Form.Label>BMI (m²)</Form.Label><Form.Control type="number" step="0.1" value={bmi} onChange={(e) => setBmi(e.target.value)} placeholder="Enter BMI" required /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Comorbidities</Form.Label><Form.Control type="text" value={comorbidities} onChange={(e) => setComorbidities(e.target.value)} placeholder="Enter comorbidities (optional)" /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Family History</Form.Label><Form.Control type="text" value={familyHistory} onChange={(e) => setFamilyHistory(e.target.value)} placeholder="Enter family history (optional)" /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Menopausal History</Form.Label><Form.Control type="text" value={menopausalHistory} onChange={(e) => setMenopausalHistory(e.target.value)} placeholder="Enter menopausal history (optional)" /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Phone Number</Form.Label><Form.Control type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Enter phone number" required /></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Current Address</Form.Label><Form.Control type="text" value={currentAddress} onChange={(e) => setCurrentAddress(e.target.value)} placeholder="Enter current address" required /></Form.Group>
+            <Form.Group className="mb-3"><Form.Label>Phone Number2</Form.Label><Form.Control type="text" value={phoneNumber2} onChange={(e) => setPhoneNumber2(e.target.value)} placeholder="Enter phone number2" required /></Form.Group>
+            <Form.Group className="mb-3"><Form.Label>Current Address2</Form.Label><Form.Control type="text" value={currentAddress2} onChange={(e) => setCurrentAddress2(e.target.value)} placeholder="Enter current address2" required /></Form.Group>
 
             {/* Breast Cancer Details */}
             <h5 className="mb-3">Breast Cancer Details</h5>
@@ -131,7 +135,7 @@ function AddRecord() {
             <Form.Group className="mb-3"><Form.Label>Tumor Size</Form.Label><Form.Select value={tumorSize} onChange={(e) => setTumorSize(e.target.value)}><option value="">Select Size</option><option value="T0">T0</option><option value="T1">T1</option><option value="T2">T2</option><option value="T3">T3</option><option value="T4">T4</option></Form.Select></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Lymph Node Status</Form.Label><Form.Select value={lymphNodeStatus} onChange={(e) => setLymphNodeStatus(e.target.value)}><option value="">Select Status</option><option value="N0">N0</option><option value="N1">N1</option><option value="N2">N2</option><option value="N3">N3</option></Form.Select></Form.Group>
             <Form.Group className="mb-3"><Form.Label>Clinical Stage at Diagnosis</Form.Label><Form.Select value={clinicalStage} onChange={(e) => setClinicalStage(e.target.value)}><option value="">Select Stage</option><option value="Stage I">Stage I</option><option value="Stage II">Stage II</option><option value="Stage III">Stage III</option></Form.Select></Form.Group>
-            <Form.Group className="mb-3"><Form.Label>BRCA 1 Mutation Status</Form.Label><Form.Select value={brcaMutationStatus} onChange={(e) => setBrcaMutationStatus(e.target.value)}><option value="">Select Status</option><option value="BRCA 1">BRCA 1</option><option value="BRCA 2">BRCA 2</option><option value="Others">Others</option><option value="Unknown">Unknown</option></Form.Select></Form.Group>
+            <Form.Group className="mb-3"><Form.Label>Genetic Mutation Status</Form.Label><Form.Select value={brcaMutationStatus} onChange={(e) => setBrcaMutationStatus(e.target.value)}><option value="">Select Status</option><option value="BRCA 1">BRCA 1</option><option value="BRCA 2">BRCA 2</option><option value="Others">Others</option><option value="Unknown">Unknown</option></Form.Select></Form.Group>
             <Form.Group className="mb-3"><Form.Label>PDL-1 Expression (SP142)</Form.Label><Form.Select value={pdla1Expression} onChange={(e) => setPdla1Expression(e.target.value)}><option value="">Select Expression</option><option value="Positive">Positive</option><option value="Negative">Negative</option><option value="Not Done">Not Done</option></Form.Select></Form.Group>
 
             {/* Treatment Protocol */}
@@ -199,9 +203,7 @@ function AddRecord() {
                 <option value="NO">NO</option>
               </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3"><Form.Label>ypTono</Form.Label><Form.Control type="text" value={pathologicalResponse.ypTONO} onChange={(e) => handlePathologicalResponseChange('ypTONO', e.target.value)} placeholder="Enter ypTono" /></Form.Group>
-            <Form.Group className="mb-3"><Form.Label>ypT</Form.Label><Form.Control type="text" value={pathologicalResponse.ypT} onChange={(e) => handlePathologicalResponseChange('ypT', e.target.value)} placeholder="Enter ypT" /></Form.Group>
-            <Form.Group className="mb-3"><Form.Label>ypN</Form.Label><Form.Control type="text" value={pathologicalResponse.ypN} onChange={(e) => handlePathologicalResponseChange('ypN', e.target.value)} placeholder="Enter ypN" /></Form.Group>
+            <Form.Group className="mb-3"><Form.Label>ypT,N</Form.Label><Form.Control type="text" value={pathologicalResponse.ypTONO} onChange={(e) => handlePathologicalResponseChange('ypTONO', e.target.value)} placeholder="Enter ypT,N" /></Form.Group>
            
             <Form.Group className="mb-3">
   <Form.Label>Types of Surgery</Form.Label>

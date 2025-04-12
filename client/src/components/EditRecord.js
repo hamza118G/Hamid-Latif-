@@ -18,6 +18,8 @@ function EditRecord() {
   const [menopausalHistory, setMenopausalHistory] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [currentAddress, setCurrentAddress] = useState('');
+  const [phoneNumber2, setPhoneNumber2] = useState('');
+  const [currentAddress2, setCurrentAddress2] = useState('');
   // Breast Cancer Details
   const [dateOfDiagnosis, setDateOfDiagnosis] = useState('');
   const [modeOfHistologicalDiagnosis, setModeOfHistologicalDiagnosis] = useState('');
@@ -41,7 +43,7 @@ function EditRecord() {
   const [adverseEventsReason, setAdverseEventsReason] = useState('');
   // Response to Treatment
   const [radiologicalResponse, setRadiologicalResponse] = useState('');
-  const [pathologicalResponse, setPathologicalResponse] = useState({ pcr: '', ypTONO: '', ypT: '', ypN: '' });
+  const [pathologicalResponse, setPathologicalResponse] = useState({ pcr: '', ypTONO: '' });
   const [typesOfSurgery, setTypesOfSurgery] = useState('');
   const [axillaryDissectionPerformed, setAxillaryDissectionPerformed] = useState('');
   const [adjuvantTreatment, setAdjuvantTreatment] = useState('');
@@ -77,6 +79,8 @@ function EditRecord() {
           setFamilyHistory(patient.familyHistory || '');
           setMenopausalHistory(patient.menopausalHistory || '');
           setPhoneNumber(patient.phoneNumber);
+          setCurrentAddress2(patient.currentAddress2);
+          setPhoneNumber2(patient.phoneNumber2);
           setCurrentAddress(patient.currentAddress);
           setDateOfDiagnosis(patient.dateOfDiagnosis ? patient.dateOfDiagnosis.split('T')[0] : '');
           setModeOfHistologicalDiagnosis(patient.modeOfHistologicalDiagnosis || '');
@@ -101,8 +105,7 @@ function EditRecord() {
           setPathologicalResponse({
             pcr: patient.pathologicalResponse?.pcr || '',
             ypTONO: patient.pathologicalResponse?.ypTONO || '',
-            ypT: patient.pathologicalResponse?.ypT || '',
-            ypN: patient.pathologicalResponse?.ypN || ''
+           
           });
           const predefinedOptions = ["Breast Conservation Surgery", "MRM (Modified Radical Mastectomy)"];
         if (predefinedOptions.includes(patient.typesOfSurgery)) {
@@ -153,7 +156,7 @@ function EditRecord() {
         `http://localhost:5000/api/patient/update/${id}`,
         {
           patientName, uniquePatientId, patientId, cnic, age: Number(age), gender, bmi: Number(bmi),
-          comorbidities, familyHistory, menopausalHistory, phoneNumber, currentAddress,
+          comorbidities, familyHistory, menopausalHistory, phoneNumber, currentAddress,phoneNumber2, currentAddress2,
           dateOfDiagnosis: dateOfDiagnosis || null, modeOfHistologicalDiagnosis, multifocalBreastCancer,
           lateralityOfBreastCancer, histopathologicalGrade, morphologyOfBreastCancer,
           ki67: ki67 ? Number(ki67) : null, tumorSize, lymphNodeStatus, clinicalStage,
@@ -197,6 +200,8 @@ function EditRecord() {
               <Form.Group className="mb-3"><Form.Label>Menopausal History</Form.Label><Form.Control type="text" value={menopausalHistory} onChange={(e) => setMenopausalHistory(e.target.value)} placeholder="Enter menopausal history (optional)" /></Form.Group>
               <Form.Group className="mb-3"><Form.Label>Phone Number</Form.Label><Form.Control type="text" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} placeholder="Enter phone number" required /></Form.Group>
               <Form.Group className="mb-3"><Form.Label>Current Address</Form.Label><Form.Control type="text" value={currentAddress} onChange={(e) => setCurrentAddress(e.target.value)} placeholder="Enter current address" required /></Form.Group>
+              <Form.Group className="mb-3"><Form.Label>Phone Number2</Form.Label><Form.Control type="text" value={phoneNumber2} onChange={(e) => setPhoneNumber2(e.target.value)} placeholder="Enter phone number2" required /></Form.Group>
+              <Form.Group className="mb-3"><Form.Label>Current Address2</Form.Label><Form.Control type="text" value={currentAddress2} onChange={(e) => setCurrentAddress2(e.target.value)} placeholder="Enter current address2" required /></Form.Group>
 
               {/* Breast Cancer Details */}
               <h5 className="mb-3">Breast Cancer Details</h5>
@@ -277,9 +282,7 @@ function EditRecord() {
                   <option value="NO">NO</option>
                 </Form.Select>
               </Form.Group>
-              <Form.Group className="mb-3"><Form.Label>YP TONO</Form.Label><Form.Control type="text" value={pathologicalResponse.ypTONO} onChange={(e) => handlePathologicalResponseChange('ypTONO', e.target.value)} placeholder="Enter YP TONO" /></Form.Group>
-              <Form.Group className="mb-3"><Form.Label>YP T</Form.Label><Form.Control type="text" value={pathologicalResponse.ypT} onChange={(e) => handlePathologicalResponseChange('ypT', e.target.value)} placeholder="Enter YP T" /></Form.Group>
-              <Form.Group className="mb-3"><Form.Label>YP N</Form.Label><Form.Control type="text" value={pathologicalResponse.ypN} onChange={(e) => handlePathologicalResponseChange('ypN', e.target.value)} placeholder="Enter YP N" /></Form.Group>
+              <Form.Group className="mb-3"><Form.Label>yp T,N</Form.Label><Form.Control type="text" value={pathologicalResponse.ypTONO} onChange={(e) => handlePathologicalResponseChange('ypTONO', e.target.value)} placeholder="Enter YP TONO" /></Form.Group>
               <Form.Group className="mb-3">
   <Form.Label>Types of Surgery</Form.Label>
   <Form.Select
