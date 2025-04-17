@@ -41,7 +41,7 @@ function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter email"
-                required
+                required 
               />
             </Form.Group>
 

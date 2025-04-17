@@ -29,6 +29,12 @@ const patientSchema = new mongoose.Schema({
   clinicalStage: { type: String, enum: ['Stage I', 'Stage II', 'Stage III'] },
   brcaMutationStatus: { type: String, enum: ['BRCA 1', 'BRCA 2', 'Others', 'Unknown'] },
   pdla1Expression: { type: String, enum: ['Positive', 'Negative', 'Not Done'] },
+  receptor: { type: String, enum: ['Triple negative', 'ER'] },
+  sideEffect: { type: String },
+  grade34Toxicity: { type: String, enum: ['Yes', 'No'] },
+  grade34ToxicityDetails: { type: String },
+  tumorReduction: { type: String, enum: ['Yes', 'No'] },
+  tumorReductionDetails: { type: String },
   // Treatment Protocol
   neoadjuvantChemotherapy: [{
     cycle: { type: String, enum: [
@@ -60,9 +66,13 @@ const patientSchema = new mongoose.Schema({
     ypN: { type: String }
   },
   typesOfSurgery: { type: String }, // Changed to a simple String type to allow custom values
-  otherSurgeryType:{type:String},
+  otherSurgeryType: { type: String },
+  adjuvantTreatment: { type: String, enum: ['Capecitabine', 'Olaparib', 'No Therapy'] },
   // Survival & Follow-Up
-  dateOfLastFollowUp: { type: Date },
+  followUps: [{
+    dateOfLastFollowUp: { type: Date },
+    openColumn: { type: String }
+  }],
   relapse: { type: String, enum: ['Yes', 'No'] },
   siteOfRelapse: { type: String, enum: ['Local', 'Distant'] },
   distantRelapseSite: { type: String },

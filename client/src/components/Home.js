@@ -1,4 +1,3 @@
-// client/src/components/Home.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
@@ -125,6 +124,13 @@ function Home() {
       new Date(chemo.date).toLocaleDateString(),
       chemo.clinicalExamination,
     ]);
+    // Prepare follow-up data
+    const followUpData = patient.followUps && patient.followUps.length > 0
+      ? patient.followUps.map((followUp) => [
+          followUp.dateOfLastFollowUp ? new Date(followUp.dateOfLastFollowUp).toLocaleDateString() : 'N/A',
+          followUp.openColumn || 'N/A',
+        ])
+      : [];
     autoTable(doc, {
       startY: 20,
       headStyles: { fontSize: 12 },
@@ -142,44 +148,60 @@ function Home() {
         ['Address', patient.currentAddress],
         ['Phone Number2', patient.phoneNumber2],
         ['Address2', patient.currentAddress2],
-        ['Comorbidities', patient.comorbidities],
-        ['Family History', patient.familyHistory],
-        ['Menopausal History', patient.menopausalHistory],
-        ['Date Of Diagnosis', new Date(patient.dateOfDiagnosis).toLocaleDateString()],
-        ['Mode Of Histological Diagnosis', patient.modeOfHistologicalDiagnosis],
-        ['Multi-Focal Breast Cancer', patient.multifocalBreastCancer],
-        ['Laterality Of Breast Cancer', patient.lateralityOfBreastCancer],
-        ['Histopathological Grade', patient.histopathologicalGrade],
-        ['Morphology Of Breast Cancer', patient.morphologyOfBreastCancer],
-        ['ki67', patient.ki67],
-        ['Tumor Size', patient.tumorSize],
-        ['Lymph Node Status', patient.lymphNodeStatus],
-        ['Brca Mutation Status', patient.brcaMutationStatus],
-        ['PDLA1 Expression', patient.pdla1Expression],
-        ['Any Treatment Delays', patient.anyTreatmentDelays],
-        ['Treatment Delays Reason', patient.treatmentDelaysReason],
-        ['Dose Modification', patient.doseModification],
-        ['Dose Modification Reason', patient.doseModificationReason],
-        ['Adverse Events Noted', patient.adverseEventsNoted],
-        ['Adverse Events Reason', patient.adverseEventsReason],
-        ['Radiological Response', patient.radiologicalResponse],
-        ['Pathological Response', patient.pathologicalResponse.pcr],
-        ['Pathological ypTONO', patient.pathologicalResponse.ypTONO],
-        ['Types Of Surgery', patient.typesOfSurgery],
-        ['Relapse', patient.relapse],
-        ['Site Of Relapse', patient.siteOfRelapse],
-        ['Distant Relapse Site', patient.distantRelapseSite],
-        ['Disease Free Survival', patient.diseaseFreeSurvival],
-        ['Overall Survival', patient.overallSurvival],
+        ['Comorbidities', patient.comorbidities || 'N/A'],
+        ['Family History', patient.familyHistory || 'N/A'],
+        ['Menopausal History', patient.menopausalHistory || 'N/A'],
+        ['Date Of Diagnosis', patient.dateOfDiagnosis ? new Date(patient.dateOfDiagnosis).toLocaleDateString() : 'N/A'],
+        ['Mode Of Histological Diagnosis', patient.modeOfHistologicalDiagnosis || 'N/A'],
+        ['Multi-Focal Breast Cancer', patient.multifocalBreastCancer || 'N/A'],
+        ['Laterality Of Breast Cancer', patient.lateralityOfBreastCancer || 'N/A'],
+        ['Histopathological Grade', patient.histopathologicalGrade || 'N/A'],
+        ['Morphology Of Breast Cancer', patient.morphologyOfBreastCancer || 'N/A'],
+        ['ki67', patient.ki67 || 'N/A'],
+        ['Tumor Size', patient.tumorSize || 'N/A'],
+        ['Lymph Node Status', patient.lymphNodeStatus || 'N/A'],
+        ['Brca Mutation Status', patient.brcaMutationStatus || 'N/A'],
+        ['PDLA1 Expression', patient.pdla1Expression || 'N/A'],
+        ['Recptor Status', patient.receptor || 'N/A'],
+        ['Side Effect', patient.sideEffect || 'N/A'],
+        ['Grade3/4 , Toxicity', patient.grade34Toxicity || 'N/A'],
+        ['Grade3/4 Toxicity Detail', patient.grade34ToxicityDetails || 'N/A'],
+        ['Tumor Reduction', patient.tumorReduction || 'N/A'],
+        ['Tumor Reduction Details', patient.tumorReductionDetails || 'N/A'],
+        ['Any Treatment Delays', patient.anyTreatmentDelays || 'N/A'],
+        ['Treatment Delays Reason', patient.treatmentDelaysReason || 'N/A'],
+        ['Dose Modification', patient.doseModification || 'N/A'],
+        ['Dose Modification Reason', patient.doseModificationReason || 'N/A'],
+        ['Adverse Events Noted', patient.adverseEventsNoted || 'N/A'],
+        ['Adverse Events Reason', patient.adverseEventsReason || 'N/A'],
+        ['Radiological Response', patient.radiologicalResponse || 'N/A'],
+        ['Pathological Response', patient.pathologicalResponse?.pcr || 'N/A'],
+        ['Pathological ypTONO', patient.pathologicalResponse?.ypTONO || 'N/A'],
+        ['Types Of Surgery', patient.typesOfSurgery || 'N/A'],
+        ['Relapse', patient.relapse || 'N/A'],
+        ['Site Of Relapse', patient.siteOfRelapse || 'N/A'],
+        ['Distant Relapse Site', patient.distantRelapseSite || 'N/A'],
+        ['Disease Free Survival', patient.diseaseFreeSurvival || 'N/A'],
+        ['Overall Survival', patient.overallSurvival || 'N/A'],
         ['Date Created', new Date(patient.createdAt).toLocaleString()],
       ],
     });
+    let finalY = doc.lastAutoTable.finalY || 20;
     if (chemoData.length > 0) {
-      doc.text("NEOADUVANT CHEMO-THERAPY", 14, doc.lastAutoTable.finalY + 10);
+      doc.text("NEOADUVANT CHEMO-THERAPY", 20, finalY + 10);
       autoTable(doc, {
-        startY: doc.lastAutoTable.finalY + 15,
+        startY: finalY + 15,
         head: [['Treatment', 'Date', 'Clinical Examination']],
         body: chemoData,
+      });
+      finalY = doc.lastAutoTable.finalY;
+    }
+    if (followUpData.length > 0) {
+      doc.text("FOLLOW-UP ENTRIES", 20, finalY + 10);
+      autoTable(doc, {
+        startY: finalY + 15,
+        head: [['Date of Last Follow-Up', 'Open Column']],
+        body: followUpData,
       });
     }
     doc.save(`Patient_Record_${patient.patientId}.pdf`);
@@ -255,7 +277,6 @@ function Home() {
               <Col md={4}>
                 <Card className="stats-card text-center">
                   <Card.Body>
-                    {/* Make Total Submissions clickable */}
                     <Card.Text className="test">
                       <strong>
                         <Link to="/all-submissions" style={{ textDecoration: 'none', color: 'inherit' }}>

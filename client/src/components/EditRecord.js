@@ -1,4 +1,3 @@
-// client/src/components/EditRecord.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Form, Card, Container, Row, Col } from 'react-bootstrap';
@@ -33,6 +32,12 @@ function EditRecord() {
   const [clinicalStage, setClinicalStage] = useState('');
   const [brcaMutationStatus, setBrcaMutationStatus] = useState('');
   const [pdla1Expression, setPdla1Expression] = useState('');
+  const [receptor, setReceptor] = useState('');
+  const [sideEffect, setSideEffect] = useState('');
+  const [grade34Toxicity, setGrade34Toxicity] = useState('');
+  const [grade34ToxicityDetails, setGrade34ToxicityDetails] = useState('');
+  const [tumorReduction, setTumorReduction] = useState('');
+  const [tumorReductionDetails, settumorReductionDetails] = useState('');
   // Treatment Protocol
   const [neoadjuvantChemotherapy, setNeoadjuvantChemotherapy] = useState([]);
   const [anyTreatmentDelays, setAnyTreatmentDelays] = useState('');
@@ -48,7 +53,7 @@ function EditRecord() {
   const [axillaryDissectionPerformed, setAxillaryDissectionPerformed] = useState('');
   const [adjuvantTreatment, setAdjuvantTreatment] = useState('');
   // Survival & Follow-Up
-  const [dateOfLastFollowUp, setDateOfLastFollowUp] = useState('');
+  const [followUps, setFollowUps] = useState([{ dateOfLastFollowUp: '', openColumn: '' }]);
   const [relapse, setRelapse] = useState('');
   const [siteOfRelapse, setSiteOfRelapse] = useState('');
   const [distantRelapseSite, setDistantRelapseSite] = useState('');
@@ -94,6 +99,12 @@ function EditRecord() {
           setClinicalStage(patient.clinicalStage || '');
           setBrcaMutationStatus(patient.brcaMutationStatus || '');
           setPdla1Expression(patient.pdla1Expression || '');
+          setReceptor(patient.receptor || '');
+          setSideEffect(patient.sideEffect || '');
+          setGrade34Toxicity(patient.grade34Toxicity || '');
+          setGrade34ToxicityDetails(patient.grade34ToxicityDetails || '');
+          setTumorReduction(patient.tumorReduction || '');
+          settumorReductionDetails(patient.tumorReductionDetails || '');
           setNeoadjuvantChemotherapy(patient.neoadjuvantChemotherapy || []);
           setAnyTreatmentDelays(patient.anyTreatmentDelays || '');
           setTreatmentDelaysReason(patient.treatmentDelaysReason || '');
@@ -105,19 +116,23 @@ function EditRecord() {
           setPathologicalResponse({
             pcr: patient.pathologicalResponse?.pcr || '',
             ypTONO: patient.pathologicalResponse?.ypTONO || '',
-           
           });
           const predefinedOptions = ["Breast Conservation Surgery", "MRM (Modified Radical Mastectomy)"];
-        if (predefinedOptions.includes(patient.typesOfSurgery)) {
-          setTypesOfSurgery(patient.typesOfSurgery || '');
-          setOtherSurgeryType('');
-        } else {
-          setTypesOfSurgery("Others");
-          setOtherSurgeryType(patient.typesOfSurgery || '');
-        }
+          if (predefinedOptions.includes(patient.typesOfSurgery)) {
+            setTypesOfSurgery(patient.typesOfSurgery || '');
+            setOtherSurgeryType('');
+          } else {
+            setTypesOfSurgery("Others");
+            setOtherSurgeryType(patient.typesOfSurgery || '');
+          }
           setAxillaryDissectionPerformed(patient.axillaryDissectionPerformed || '');
           setAdjuvantTreatment(patient.adjuvantTreatment || '');
-          setDateOfLastFollowUp(patient.dateOfLastFollowUp ? patient.dateOfLastFollowUp.split('T')[0] : '');
+          setFollowUps(patient.followUps && patient.followUps.length > 0 
+            ? patient.followUps.map(fu => ({
+                dateOfLastFollowUp: fu.dateOfLastFollowUp ? fu.dateOfLastFollowUp.split('T')[0] : '',
+                openColumn: fu.openColumn || ''
+              }))
+            : [{ dateOfLastFollowUp: '', openColumn: '' }]);
           setRelapse(patient.relapse || '');
           setSiteOfRelapse(patient.siteOfRelapse || '');
           setDistantRelapseSite(patient.distantRelapseSite || '');
@@ -148,6 +163,16 @@ function EditRecord() {
     setPathologicalResponse(prev => ({ ...prev, [field]: value }));
   };
 
+  const handleAddFollowUp = () => {
+    setFollowUps([...followUps, { dateOfLastFollowUp: '', openColumn: '' }]);
+  };
+
+  const handleFollowUpChange = (index, field, value) => {
+    const updatedFollowUps = [...followUps];
+    updatedFollowUps[index][field] = value;
+    setFollowUps(updatedFollowUps);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
@@ -156,15 +181,15 @@ function EditRecord() {
         `http://localhost:5000/api/patient/update/${id}`,
         {
           patientName, uniquePatientId, patientId, cnic, age: Number(age), gender, bmi: Number(bmi),
-          comorbidities, familyHistory, menopausalHistory, phoneNumber, currentAddress,phoneNumber2, currentAddress2,
+          comorbidities, familyHistory, menopausalHistory, phoneNumber, currentAddress, phoneNumber2, currentAddress2,
           dateOfDiagnosis: dateOfDiagnosis || null, modeOfHistologicalDiagnosis, multifocalBreastCancer,
           lateralityOfBreastCancer, histopathologicalGrade, morphologyOfBreastCancer,
           ki67: ki67 ? Number(ki67) : null, tumorSize, lymphNodeStatus, clinicalStage,
-          brcaMutationStatus, pdla1Expression, neoadjuvantChemotherapy, anyTreatmentDelays,
-          treatmentDelaysReason, doseModification, doseModificationReason, adverseEventsNoted,
-          adverseEventsReason, radiologicalResponse, pathologicalResponse, 
+          brcaMutationStatus, pdla1Expression, receptor, sideEffect, grade34Toxicity, grade34ToxicityDetails,
+          tumorReductionDetails, tumorReduction, neoadjuvantChemotherapy, anyTreatmentDelays, treatmentDelaysReason, doseModification, doseModificationReason,
+          adverseEventsNoted, adverseEventsReason, radiologicalResponse, pathologicalResponse,
           typesOfSurgery: typesOfSurgery === "Others" ? otherSurgeryType : typesOfSurgery,
-          axillaryDissectionPerformed, adjuvantTreatment, dateOfLastFollowUp: dateOfLastFollowUp || null,
+          axillaryDissectionPerformed, adjuvantTreatment, followUps,
           relapse, siteOfRelapse, distantRelapseSite, diseaseFreeSurvival: diseaseFreeSurvival ? Number(diseaseFreeSurvival) : null,
           overallSurvival: overallSurvival ? Number(overallSurvival) : null
         },
@@ -217,6 +242,36 @@ function EditRecord() {
               <Form.Group className="mb-3"><Form.Label>Clinical Stage @ Diagnosis</Form.Label><Form.Select value={clinicalStage} onChange={(e) => setClinicalStage(e.target.value)}><option value="">Select Stage</option><option value="Stage I">Stage I</option><option value="Stage II">Stage II</option><option value="Stage III">Stage III</option></Form.Select></Form.Group>
               <Form.Group className="mb-3"><Form.Label>BRCA 1 Mutation Status</Form.Label><Form.Select value={brcaMutationStatus} onChange={(e) => setBrcaMutationStatus(e.target.value)}><option value="">Select Status</option><option value="BRCA 1">BRCA 1</option><option value="BRCA 2">BRCA 2</option><option value="Others">Others</option><option value="Unknown">Unknown</option></Form.Select></Form.Group>
               <Form.Group className="mb-3"><Form.Label>PDL-1 Expression (SP142)</Form.Label><Form.Select value={pdla1Expression} onChange={(e) => setPdla1Expression(e.target.value)}><option value="">Select Expression</option><option value="Positive">Positive</option><option value="Negative">Negative</option><option value="Not Done">Not Done</option></Form.Select></Form.Group>
+              <Form.Group className="mb-3"><Form.Label>Receptor Status</Form.Label><Form.Select value={receptor} onChange={(e) => setReceptor(e.target.value)}><option value="receptor">Select Receptor Status</option><option value="Triple negative">Triple Negative</option><option value="ER">ER 1-10%</option></Form.Select></Form.Group>
+              <Form.Group className="mb-3"><Form.Label>Side Effect</Form.Label><Form.Control type="text" value={sideEffect} onChange={(e) => setSideEffect(e.target.value)} placeholder="Enter side effect" /></Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label>Grade 3/4 Toxicity</Form.Label>
+                <Form.Select value={grade34Toxicity} onChange={(e) => setGrade34Toxicity(e.target.value)}>
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </Form.Select>
+              </Form.Group>
+              {grade34Toxicity === 'Yes' && (
+                <Form.Group className="mb-3">
+                  <Form.Label>Grade 3/4 Toxicity Details</Form.Label>
+                  <Form.Control type="text" value={grade34ToxicityDetails} onChange={(e) => setGrade34ToxicityDetails(e.target.value)} placeholder="Specify toxicity details" />
+                </Form.Group>
+              )}
+              <Form.Group className='mb-3'>
+                <Form.Label>% of Tumor Reduction</Form.Label>
+                <Form.Select value={tumorReduction} onChange={(e) => setTumorReduction(e.target.value)}>
+                  <option value="">Select</option>
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </Form.Select>
+              </Form.Group>
+              {tumorReduction === 'No' && (
+                <Form.Group className="mb-3">
+                  <Form.Label>Tumor Reduction Details</Form.Label>
+                  <Form.Control type="text" value={tumorReductionDetails} onChange={(e) => settumorReductionDetails(e.target.value)} placeholder="Specify toxicity details" />
+                </Form.Group>
+              )}
 
               {/* Treatment Protocol */}
               <h5 className="mb-3">Treatment Protocol</h5>
@@ -274,46 +329,55 @@ function EditRecord() {
                 </Form.Select>
               </Form.Group>
               <h6>Pathological Response</h6>
-              <Form.Group className="mb-3">
-                <Form.Label>PCR</Form.Label>
-                <Form.Select value={pathologicalResponse.pcr} onChange={(e) => handlePathologicalResponseChange('pcr', e.target.value)}>
-                  <option value="">Select</option>
-                  <option value="YES">YES</option>
-                  <option value="NO">NO</option>
-                </Form.Select>
-              </Form.Group>
+            <Form.Group className="mb-3">
+                         <Form.Label>PCR</Form.Label>
+                         <Form.Select value={pathologicalResponse.pcr} onChange={(e) => handlePathologicalResponseChange('pcr', e.target.value)}>
+                           <option value="">Select</option>
+                           <option value="YES">YES</option>
+                           <option value="NO">NO</option>
+                         </Form.Select>
+                       </Form.Group>
+                       {pathologicalResponse.pcr === 'YES' && (
+                         <Form.Group className="mb-3">
+                           <Form.Label>ypT,N</Form.Label>
+                           <Form.Control
+                             type="text"
+                             value={pathologicalResponse.ypTONO}
+                             onChange={(e) => handlePathologicalResponseChange('ypTONO', e.target.value)}
+                             placeholder="Enter ypT,N"
+                           />
+                         </Form.Group>
+                       )}
               <Form.Group className="mb-3"><Form.Label>yp T,N</Form.Label><Form.Control type="text" value={pathologicalResponse.ypTONO} onChange={(e) => handlePathologicalResponseChange('ypTONO', e.target.value)} placeholder="Enter YP TONO" /></Form.Group>
               <Form.Group className="mb-3">
-  <Form.Label>Types of Surgery</Form.Label>
-  <Form.Select
-    value={typesOfSurgery}
-    onChange={(e) => {
-      const value = e.target.value;
-      setTypesOfSurgery(value);
-      // Reset otherSurgeryType if not "Others"
-      if (value !== "Others") {
-        setOtherSurgeryType('');
-      }
-    }}
-  >
-    <option value="">Select</option>
-    <option value="Breast Conservation Surgery">Breast Conservation Surgery</option>
-    <option value="MRM (Modified Radical Mastectomy)">MRM (Modified Radical Mastectomy)</option>
-    <option value="Others">Others</option>
-  </Form.Select>
-</Form.Group>
-
-{typesOfSurgery === "Others" && (
-  <Form.Group className="mb-3">
-    <Form.Label>Specify Other Surgery Type</Form.Label>
-    <Form.Control
-      type="text"
-      value={otherSurgeryType}
-      onChange={(e) => setOtherSurgeryType(e.target.value)}
-      placeholder="Specify surgery type"
-    />
-  </Form.Group>
-)}
+                <Form.Label>Types of Surgery</Form.Label>
+                <Form.Select
+                  value={typesOfSurgery}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setTypesOfSurgery(value);
+                    if (value !== "Others") {
+                      setOtherSurgeryType('');
+                    }
+                  }}
+                >
+                  <option value="">Select</option>
+                  <option value="Breast Conservation Surgery">Breast Conservation Surgery</option>
+                  <option value="MRM (Modified Radical Mastectomy)">MRM (Modified Radical Mastectomy)</option>
+                  <option value="Others">Others</option>
+                </Form.Select>
+              </Form.Group>
+              {typesOfSurgery === "Others" && (
+                <Form.Group className="mb-3">
+                  <Form.Label>Specify Other Surgery Type</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={otherSurgeryType}
+                    onChange={(e) => setOtherSurgeryType(e.target.value)}
+                    placeholder="Specify surgery type"
+                  />
+                </Form.Group>
+              )}
               <Form.Group className="mb-3">
                 <Form.Label>Adjuvant Treatment</Form.Label>
                 <Form.Select value={adjuvantTreatment} onChange={(e) => setAdjuvantTreatment(e.target.value)}>
@@ -326,7 +390,33 @@ function EditRecord() {
 
               {/* Survival & Follow-Up */}
               <h5 className="mb-3">Survival & Follow-Up</h5>
-              <Form.Group className="mb-3"><Form.Label>Date of Last Follow-Up</Form.Label><Form.Control type="date" value={dateOfLastFollowUp} onChange={(e) => setDateOfLastFollowUp(e.target.value)} /></Form.Group>
+              {followUps.map((followUp, index) => (
+                <Row key={index} className="mb-3">
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>Date of Last Follow-Up</Form.Label>
+                      <Form.Control 
+                        type="date" 
+                        value={followUp.dateOfLastFollowUp} 
+                        onChange={(e) => handleFollowUpChange(index, 'dateOfLastFollowUp', e.target.value)} 
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col md={6}>
+                    <Form.Group>
+                      <Form.Label>Open Column</Form.Label>
+                      <Form.Control 
+                        type="text" 
+                        value={followUp.openColumn} 
+                        onChange={(e) => handleFollowUpChange(index, 'openColumn', e.target.value)} 
+                        placeholder="Enter additional follow-up notes" 
+                      />
+                    </Form.Group>
+                  </Col>
+                </Row>
+              ))}
+              <Button variant="secondary" size="sm" onClick={handleAddFollowUp} className="mb-3">Add Follow-Up Entry</Button>
+
               <Form.Group className="mb-3">
                 <Form.Label>Relapse</Form.Label>
                 <Form.Select value={relapse} onChange={(e) => setRelapse(e.target.value)}>
