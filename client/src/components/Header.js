@@ -28,7 +28,6 @@ function Header() {
               <>
                 <Nav.Link as={Link} to="/home">Home</Nav.Link>
                 <Nav.Link as={Link} to="/add-record">Add Record</Nav.Link>
-                <Nav.Link as={Link} to="/register">Add Account</Nav.Link>
                 <Button variant="outline-light" onClick={handleLogout}>
                   Logout
                 </Button>

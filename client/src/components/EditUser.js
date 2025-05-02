@@ -16,10 +16,10 @@ function EditUser() {
     const token = localStorage.getItem('token');
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/auth/users`, {
+        const response = await axios.get(`http://localhost:5000/api/auth/users/${id}`, { // Use the specific user ID
           headers: { Authorization: `Bearer ${token}` }
         });
-        const user = response.data.find(u => u._id === id);
+        const user = response.data; // Assuming your backend sends back a single user object
         if (user) {
           setUsername(user.username);
           setEmail(user.email);
@@ -40,16 +40,19 @@ function EditUser() {
     try {
       const updateData = { username, email };
       if (newPassword) {
-        // Optional: Add client-side password validation
+      
         if (newPassword.length < 8) {
           setError('Password must be at least 8 characters long');
           return;
         }
         updateData.password = newPassword; // Send plaintext password to backend
+
+        console.log("updateData",updateData)
       }
       await axios.put(
         `http://localhost:5000/api/auth/users/${id}`,
         updateData,
+        
         { headers: { Authorization: `Bearer ${token}` } }
       );
       navigate('/home');

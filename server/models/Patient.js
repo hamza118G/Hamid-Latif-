@@ -18,11 +18,11 @@ const patientSchema = new mongoose.Schema({
   currentAddress2: { type: String, required: true },
   // Breast Cancer Details
   dateOfDiagnosis: { type: Date },
-  modeOfHistologicalDiagnosis: { type: String, enum: ['Trucut Biopsy', 'FNAC', 'Others'] },
+  modeOfHistologicalDiagnosis: { type: String },
   multifocalBreastCancer: { type: String, enum: ['Yes', 'No', 'Unknown'] },
   lateralityOfBreastCancer: { type: String, enum: ['Right', 'Left', 'B/L'] },
   histopathologicalGrade: { type: String, enum: ['Grade I', 'Grade II', 'Grade III'] },
-  morphologyOfBreastCancer: { type: String, enum: ['Ductal', 'Lobular', 'Mixed Duct&lobu', 'Others'] },
+  morphologyOfBreastCancer: { type: String },
   ki67: { type: Number }, // Percentage
   tumorSize: { type: String, enum: ['T0', 'T1', 'T2', 'T3', 'T4'] },
   lymphNodeStatus: { type: String, enum: ['N0', 'N1', 'N2', 'N3'] },

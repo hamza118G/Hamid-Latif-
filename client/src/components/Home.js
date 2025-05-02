@@ -1,3 +1,4 @@
+// src/component/Home.js
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, Card, Row, Col, Container } from 'react-bootstrap';
@@ -16,13 +17,16 @@ function Home() {
   const [searchCnic, setSearchCnic] = useState('');
   const [totalSubmissions, setTotalSubmissions] = useState(0);
   const navigate = useNavigate();
+  const [currentUserEmail, setCurrentUserEmail] = useState(''); // State to store the current user's email
 
   useEffect(() => {
     const token = localStorage.getItem('token');
+    const email = localStorage.getItem('userEmail'); // Get the email from localStorage
     if (token) {
       setIsLoggedIn(true);
       fetchPatients(token);
       fetchTotalSubmissions();
+      setCurrentUserEmail(email); // Set the current user's email
     } else {
       navigate('/');
     }
@@ -115,6 +119,7 @@ function Home() {
     fetchAllUsers(token);
     setSearchCnic('');
   };
+  
 
   const generatePDF = (patient) => {
     const doc = new jsPDF();
@@ -157,6 +162,7 @@ function Home() {
         ['Laterality Of Breast Cancer', patient.lateralityOfBreastCancer || 'N/A'],
         ['Histopathological Grade', patient.histopathologicalGrade || 'N/A'],
         ['Morphology Of Breast Cancer', patient.morphologyOfBreastCancer || 'N/A'],
+        
         ['ki67', patient.ki67 || 'N/A'],
         ['Tumor Size', patient.tumorSize || 'N/A'],
         ['Lymph Node Status', patient.lymphNodeStatus || 'N/A'],
@@ -268,50 +274,56 @@ function Home() {
             <Card.Title className="text-center my-5 dash"><p>DASHBOARD:</p></Card.Title>
             <Row className="mb-4 justify-content-between">
               <Col md={4}>
-                <Card className="stats-card text-center">
+                <Card className="stats-card text-center mt-2">
                   <Card.Body>
-                    <Card.Text className="test"><strong>Your Submissions:</strong> {patients.length}</Card.Text>
+                    <Card.Text className="test"><strong>Your Submissions:</strong>{patients.length}</Card.Text>
                   </Card.Body>
                 </Card>
               </Col>
-              <Col md={4}>
-                <Card className="stats-card text-center">
-                  <Card.Body>
-                    <Card.Text className="test">
-                      <strong>
-                        <Link to="/all-submissions" style={{ textDecoration: 'none', color: 'inherit' }}>
-                          Total Submissions: {totalSubmissions}
-                        </Link>
-                      </strong>
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
+              {currentUserEmail === 'Dr.ZebaAziz@admin.com' && ( // Show only for Dr.ZebaAziz@admin.com
+                <Col md={4}>
+                  <Card className="stats-card text-center mt-2">
+                    <Card.Body>
+                      <Card.Text className="test">
+                        <strong>
+                          <Link to="/all-submissions" style={{ textDecoration: 'none', color: 'inherit' }}>
+                            Total Submissions: {totalSubmissions}
+                          </Link>
+                        </strong>
+                      </Card.Text>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              )}
             </Row>
             <hr />
             <Button className="btn-vibrant mb-4 d-flex justify-content-center" as={Link} to="/add-record">
               + Add New Record
             </Button>
-            <Button className="btn-vibrant mb-4 d-flex justify-content-center" as={Link} to="/register">
-              + Add New User Account
-            </Button>
+            {currentUserEmail === 'Dr.ZebaAziz@admin.com' && ( // Show only for Dr.ZebaAziz@admin.com
+              <Button className="btn-vibrant mb-4 d-flex justify-content-center" as={Link} to="/register">
+                + Add New User Account
+              </Button>
+            )}
             <Button className="btn-vibrant mb-4 d-flex justify-content-center w-100" onClick={() => { setShowAllAccounts(false); setSearchCnic(''); }}>
               My Registry
             </Button>
-            <Button className="btn-vibrant mb-4 d-flex justify-content-center w-100" onClick={() => handleShowAllAccounts(localStorage.getItem('token'))}>
-              All Accounts
-            </Button>
-            {showAllAccounts ? (
+            {currentUserEmail === 'Dr.ZebaAziz@admin.com' && ( // Show only for Dr.ZebaAziz@admin.com
+              <Button className="btn-vibrant mb-4 d-flex justify-content-center w-100" onClick={() => handleShowAllAccounts(localStorage.getItem('token'))}>
+                All Accounts
+              </Button>
+            )}
+            {showAllAccounts && currentUserEmail === 'Dr.ZebaAziz@admin.com' ? ( // Conditionally show user table
               <DataTable
-                columns={userColumns}
-                data={users}
-                pagination
-                highlightOnHover
-                striped
-                defaultSortFieldId={1}
-                defaultSortAsc={false}
-                className="vibrant-datatable"
-              />
+              columns={userColumns}
+              data={users}
+              pagination
+              highlightOnHover
+              striped
+              defaultSortFieldId={1}
+              defaultSortAsc={false}
+              className="vibrant-datatable"
+            />
             ) : (
               <>
                 <Form.Group className="mx-4 my-3 w-100 section-cnic" style={{ maxWidth: '300px' }}>

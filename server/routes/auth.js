@@ -1,4 +1,3 @@
-// server/routes/auth.js
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -48,14 +47,29 @@ router.post('/login', async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
 
     const token = jwt.sign({ id: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
-    res.json({ token });
+    // Send back the token and the user object (including email)
+    res.json({ token, user: { email: user.email } });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-// Get all users (for "All Accounts" feature)
-router.get('/users', authMiddleware, async (req, res) => {
+// Middleware to check if the user is the admin (based on email)
+const adminMiddleware = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user || user.email !== 'Dr.ZebaAziz@admin.com') { // Replace with the desired admin email
+      return res.status(403).json({ message: 'Unauthorized access' });
+    }
+    next();
+  } catch (error) {
+    console.error('Error in admin middleware:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+// Get all users (for "All Accounts" feature) - Now protected by adminMiddleware
+router.get('/users', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const users = await User.find().select('-password'); // Exclude password field
     res.json(users);
@@ -64,17 +78,84 @@ router.get('/users', authMiddleware, async (req, res) => {
   }
 });
 
-// Delete a user
-router.delete('/users/:id', authMiddleware, async (req, res) => {
+router.put('/users/:id', authMiddleware, async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    const { username, email, password } = req.body;
+    const userId = req.params.id;
 
-    await user.remove();
-    res.json({ message: 'User deleted' });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.username = username || user.username;
+    user.email = email || user.email;
+
+    if (password) {
+      if (password.length < 8) {
+        return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+    }
+
+    await user.save();
+    res.json({ message: 'User updated successfully' });
   } catch (error) {
+    console.error('Error updating user:', error);
     res.status(500).json({ error: error.message });
   }
 });
+
+// backend/routes/auth.js
+
+// Get a single user by ID
+router.get('/users/:id', authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete a user - Still protected by basic authMiddleware (you might want to add adminMiddleware here as well)
+router.delete('/users/:id', authMiddleware, async (req, res) => {
+  try {
+    const userIdToDelete = req.params.id;
+
+    const userToDelete = await User.findById(userIdToDelete);
+    if (!userToDelete) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const requestingUser = await User.findById(req.userId);
+
+    if (userToDelete.email === 'Dr.ZebaAziz@admin.com') {
+      return res.status(403).json({ message: 'Cannot delete the admin user' });
+    }
+
+    //  Admin can delete any user, and the user can delete themselves
+    if (
+      requestingUser.email === 'Dr.ZebaAziz@admin.com' ||
+      requestingUser.id === userIdToDelete
+    ) {
+      await User.deleteOne({ _id: userIdToDelete });
+      return res.json({ message: 'User deleted successfully' });
+    } else {
+      return res.status(403).json({ message: 'Unauthorized to delete this user' });
+    }
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).json({ message: 'Server error: ' + error.message });
+  }
+});
+
+
+
 
 module.exports = router;

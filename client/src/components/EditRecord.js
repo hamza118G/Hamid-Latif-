@@ -26,9 +26,11 @@ function EditRecord() {
   const [lateralityOfBreastCancer, setLateralityOfBreastCancer] = useState('');
   const [histopathologicalGrade, setHistopathologicalGrade] = useState('');
   const [morphologyOfBreastCancer, setMorphologyOfBreastCancer] = useState('');
+  const [morphologyOfBreastCancerOther, setMorphologyOfBreastCancerOther] = useState(''); // New state for "Other"
   const [ki67, setKi67] = useState('');
   const [tumorSize, setTumorSize] = useState('');
   const [lymphNodeStatus, setLymphNodeStatus] = useState('');
+  const [modeOfHistologicalDiagnosisOther, setModeOfHistologicalDiagnosisOther] = useState(''); // New state for "Other"
   const [clinicalStage, setClinicalStage] = useState('');
   const [brcaMutationStatus, setBrcaMutationStatus] = useState('');
   const [pdla1Expression, setPdla1Expression] = useState('');
@@ -93,6 +95,7 @@ function EditRecord() {
           setLateralityOfBreastCancer(patient.lateralityOfBreastCancer || '');
           setHistopathologicalGrade(patient.histopathologicalGrade || '');
           setMorphologyOfBreastCancer(patient.morphologyOfBreastCancer || '');
+          setMorphologyOfBreastCancerOther(patient.modeOfHistologicalDiagnosisOther || '');
           setKi67(patient.ki67 || '');
           setTumorSize(patient.tumorSize || '');
           setLymphNodeStatus(patient.lymphNodeStatus || '');
@@ -111,6 +114,7 @@ function EditRecord() {
           setDoseModification(patient.doseModification || '');
           setDoseModificationReason(patient.doseModificationReason || '');
           setAdverseEventsNoted(patient.adverseEventsNoted || '');
+          setModeOfHistologicalDiagnosisOther(patient.modeOfHistologicalDiagnosisOther || '');
           setAdverseEventsReason(patient.adverseEventsReason || '');
           setRadiologicalResponse(patient.radiologicalResponse || '');
           setPathologicalResponse({
@@ -182,13 +186,17 @@ function EditRecord() {
         {
           patientName, uniquePatientId, patientId, cnic, age: Number(age), gender, bmi: Number(bmi),
           comorbidities, familyHistory, menopausalHistory, phoneNumber, currentAddress, phoneNumber2, currentAddress2,
-          dateOfDiagnosis: dateOfDiagnosis || null, modeOfHistologicalDiagnosis, multifocalBreastCancer,
-          lateralityOfBreastCancer, histopathologicalGrade, morphologyOfBreastCancer,
+          dateOfDiagnosis: dateOfDiagnosis || null, multifocalBreastCancer,
+          lateralityOfBreastCancer, histopathologicalGrade,
           ki67: ki67 ? Number(ki67) : null, tumorSize, lymphNodeStatus, clinicalStage,
           brcaMutationStatus, pdla1Expression, receptor, sideEffect, grade34Toxicity, grade34ToxicityDetails,
           tumorReductionDetails, tumorReduction, neoadjuvantChemotherapy, anyTreatmentDelays, treatmentDelaysReason, doseModification, doseModificationReason,
           adverseEventsNoted, adverseEventsReason, radiologicalResponse, pathologicalResponse,
           typesOfSurgery: typesOfSurgery === "Others" ? otherSurgeryType : typesOfSurgery,
+
+          morphologyOfBreastCancer: morphologyOfBreastCancer === "Others" ? morphologyOfBreastCancerOther : morphologyOfBreastCancer,
+
+          modeOfHistologicalDiagnosis: modeOfHistologicalDiagnosis === "Others" ? modeOfHistologicalDiagnosisOther : modeOfHistologicalDiagnosis,
           axillaryDissectionPerformed, adjuvantTreatment, followUps,
           relapse, siteOfRelapse, distantRelapseSite, diseaseFreeSurvival: diseaseFreeSurvival ? Number(diseaseFreeSurvival) : null,
           overallSurvival: overallSurvival ? Number(overallSurvival) : null
@@ -231,11 +239,59 @@ function EditRecord() {
               {/* Breast Cancer Details */}
               <h5 className="mb-3">Breast Cancer Details</h5>
               <Form.Group className="mb-3"><Form.Label>Date of Diagnosis</Form.Label><Form.Control type="date" value={dateOfDiagnosis} onChange={(e) => setDateOfDiagnosis(e.target.value)} /></Form.Group>
-              <Form.Group className="mb-3"><Form.Label>Mode of Histological Diagnosis</Form.Label><Form.Select value={modeOfHistologicalDiagnosis} onChange={(e) => setModeOfHistologicalDiagnosis(e.target.value)}><option value="">Select Mode</option><option value="Trucut Biopsy">Trucut Biopsy</option><option value="FNAC">FNAC</option><option value="Others">Others</option></Form.Select></Form.Group>
+       <Form.Group className="mb-3">
+              <Form.Label>Mode of Histological Diagnosis</Form.Label>
+              <Form.Select
+                value={modeOfHistologicalDiagnosis}
+                onChange={(e) => setModeOfHistologicalDiagnosis(e.target.value)}
+              >
+                <option value="">Select Mode</option>
+                <option value="Trucut Biopsy">Trucut Biopsy</option>
+                <option value="FNAC">FNAC</option>
+                <option value="Others">Others</option>
+              </Form.Select>
+            </Form.Group>
+            {modeOfHistologicalDiagnosis === "Others" && (
+              <Form.Group className="mb-3">
+                <Form.Label>Specify Other Diagnosis</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={modeOfHistologicalDiagnosisOther}
+                  onChange={(e) => setModeOfHistologicalDiagnosisOther(e.target.value)}
+                  placeholder="Specify other diagnosis"
+                />
+                 
+              </Form.Group>
+              )}
               <Form.Group className="mb-3"><Form.Label>Multifocal Breast Cancer</Form.Label><Form.Select value={multifocalBreastCancer} onChange={(e) => setMultifocalBreastCancer(e.target.value)}><option value="">Select</option><option value="Yes">Yes</option><option value="No">No</option><option value="Unknown">Unknown</option></Form.Select></Form.Group>
               <Form.Group className="mb-3"><Form.Label>Laterality of Breast Cancer</Form.Label><Form.Select value={lateralityOfBreastCancer} onChange={(e) => setLateralityOfBreastCancer(e.target.value)}><option value="">Select</option><option value="Right">Right</option><option value="Left">Left</option><option value="B/L">B/L</option></Form.Select></Form.Group>
               <Form.Group className="mb-3"><Form.Label>Histopathological Grade</Form.Label><Form.Select value={histopathologicalGrade} onChange={(e) => setHistopathologicalGrade(e.target.value)}><option value="">Select Grade</option><option value="Grade I">Grade I</option><option value="Grade II">Grade II</option><option value="Grade III">Grade III</option></Form.Select></Form.Group>
-              <Form.Group className="mb-3"><Form.Label>Morphology of Breast Cancer</Form.Label><Form.Select value={morphologyOfBreastCancer} onChange={(e) => setMorphologyOfBreastCancer(e.target.value)}><option value="">Select Morphology</option><option value="Ductal">Ductal</option><option value="Lobular">Lobular</option><option value="Mixed Duct&lobu">Mixed Duct&lobu</option><option value="Others">Others</option></Form.Select></Form.Group>
+             
+                 <Form.Group className="mb-3">
+                           <Form.Label>Morphology of Breast Cancer</Form.Label>
+                           <Form.Select
+                             value={morphologyOfBreastCancer}
+                             onChange={(e) => setMorphologyOfBreastCancer(e.target.value)}
+                           >
+                             <option value="">Select Morphology</option>
+                             <option value="Ductal">Ductal</option>
+                             <option value="Lobular">Lobular</option>
+                             <option value="Mixed Duct&lobu">Mixed Duct&lobu</option>
+                             <option value="Others">Others</option>
+                           </Form.Select>
+                         </Form.Group>
+                         {morphologyOfBreastCancer === "Others" && (
+                           <Form.Group className="mb-3">
+                             <Form.Label>Specify Other Morphology</Form.Label>
+                             <Form.Control
+                               type="text"
+                               value={morphologyOfBreastCancerOther}
+                               onChange={(e) => setMorphologyOfBreastCancerOther(e.target.value)}
+                               placeholder="Specify other morphology"
+                             />
+                           </Form.Group>
+                         )}
+
               <Form.Group className="mb-3"><Form.Label>Ki67 (%)</Form.Label><Form.Control type="number" step="0.1" value={ki67} onChange={(e) => setKi67(e.target.value)} placeholder="Enter Ki67 percentage" /></Form.Group>
               <Form.Group className="mb-3"><Form.Label>Tumor Size</Form.Label><Form.Select value={tumorSize} onChange={(e) => setTumorSize(e.target.value)}><option value="">Select Size</option><option value="T0">T0</option><option value="T1">T1</option><option value="T2">T2</option><option value="T3">T3</option><option value="T4">T4</option></Form.Select></Form.Group>
               <Form.Group className="mb-3"><Form.Label>Lymph Node Status</Form.Label><Form.Select value={lymphNodeStatus} onChange={(e) => setLymphNodeStatus(e.target.value)}><option value="">Select Status</option><option value="N0">N0</option><option value="N1">N1</option><option value="N2">N2</option><option value="N3">N3</option></Form.Select></Form.Group>

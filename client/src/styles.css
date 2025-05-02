@@ -6,7 +6,7 @@ body{
 }
 /* Vibrant Header */
 .vibrant-navbar {
-  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+  background: #66CDAA;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
@@ -38,7 +38,7 @@ body{
 
 /* Vibrant Footer */
 .vibrant-footer {
-  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1);
+   background: #66CDAA;
   color: #fff;
   padding: 1.5rem 0;
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
@@ -59,7 +59,7 @@ body{
 }
 
 .vibrant-card .card-title {
-  color: #ff6b6b;
+  color: #66CDAA;
   font-weight: 700;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
@@ -81,7 +81,7 @@ body{
 
 /* Buttons */
 .btn-vibrant {
-  background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+   background: #66CDAA;
   border: none;
   color: #fff;
   font-weight: 500;
@@ -90,7 +90,7 @@ body{
 
 .btn-vibrant:hover {
   transform: scale(1.02);
-  background: linear-gradient(90deg, #ff8787, #66e0d9);
+   background: #66CDAA;
   color: #fff;
 }
 
@@ -101,7 +101,7 @@ body{
 }
 
 .vibrant-datatable .rdt_TableHead {
-  background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+   background: #66CDAA;
   color: #fff;
 }
 
@@ -116,7 +116,7 @@ body{
 
 /* Stats Cards */
 .stats-card {
-  background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+   background: #66CDAA;
   color: #fff;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

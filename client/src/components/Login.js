@@ -17,8 +17,9 @@ function Login() {
         email,
         password,
       });
-      // Store the token in localStorage
+      // Store the token and email in localStorage
       localStorage.setItem('token', response.data.token);
+      localStorage.setItem('userEmail', response.data.user.email); // Assuming the server sends back user data with email
       // Redirect to home page
       navigate('/home');
     } catch (error) {
